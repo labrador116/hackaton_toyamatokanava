@@ -32,7 +32,6 @@ import retrofit2.Retrofit;
 import retrofit2.http.Field;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 /**
  * @author Markin Andrey on 13.10.2017.
@@ -45,7 +44,9 @@ public class PitValidationService extends IntentService implements SensorEventLi
     private Location mCurrentLocation;
     private float mCurrentSpeed;
     private Timer mTimer;
+    private Timer mSendServerTimer;
     private LocationTimerTask mTimerTask;
+    private SendToServerLocationTimerTask mSendToServerLocationTimerTask;
     private SensorManager mSensorManager;
     private Sensor mSensorAccelerometer;
     private double mShakeRatio;
@@ -106,6 +107,10 @@ public class PitValidationService extends IntentService implements SensorEventLi
                         public void onLocationChanged(Location location) {
                             mCurrentLocation = location;
                             mCurrentSpeed = location.getSpeed();
+                            mSendServerTimer = new Timer();
+                            mSendToServerLocationTimerTask = new SendToServerLocationTimerTask();
+                            mSendServerTimer.schedule(mSendToServerLocationTimerTask,100, 1000);
+
                         }
                     });
             mTimer = new Timer();
@@ -151,7 +156,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
 
     }
 
-    private int validateRoat() {
+    private int validateRatio() {
         int result = 0;
         if ( mShakeRatio < 2) {
             result = 1;
@@ -165,7 +170,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
         return result;
     }
 
-    class LocationTimerTask extends TimerTask {
+    private class LocationTimerTask extends TimerTask {
 
         @Override
         public void run() {
@@ -178,7 +183,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
         }
     }
 
-    class SendToServerLocation extends TimerTask {
+   private class SendToServerLocationTimerTask extends TimerTask {
 
         @Override
         public void run() {
@@ -198,7 +203,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
                 ISendDataOnPostRequest postRequest = retrofit.create(ISendDataOnPostRequest.class);
                 String lng = String.valueOf(mCurrentLocation.getLongitude());
                 String lat = String.valueOf(mCurrentLocation.getLatitude());
-                String value = String.valueOf(validateRoat());
+                String value = String.valueOf(validateRatio());
 
                 Call<ResponseBody> call = postRequest.sendData(lat,lng,value);
                 try {
