@@ -3,8 +3,10 @@ package com.example.magaz.hackaton_toyamatokanava.activities;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import com.example.magaz.hackaton_toyamatokanava.R;
+import com.example.magaz.hackaton_toyamatokanava.fragments.MainFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -15,6 +17,8 @@ public class MainApplicationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_application);
+        Fragment fragment = MainFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,fragment).commit();
     }
 
     @Override
