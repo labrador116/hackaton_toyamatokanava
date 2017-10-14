@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -17,6 +18,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,17 +69,30 @@ public class MapFragment extends SupportMapFragment {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     mResponse = response.toString();
-                    List<AvtomobilePath> pathList = new ArrayList<AvtomobilePath>();
+
                     try {
                         JSONObject jsonObject = new JSONObject(mResponse);
                         JSONArray points = jsonObject.getJSONArray("points");
-                        for (int i = 0; i < points.length(); i++){
+                        for (int i = 0; i < points.length(); i++) {
                             JSONObject obj = points.getJSONObject(i);
-                            AvtomobilePath avtomobilePath = new AvtomobilePath();
-                            avtomobilePath.setLatitude(obj.getDouble("lat"));
-                            avtomobilePath.setLongitude(obj.getDouble("lng"));
-                            avtomobilePath.setLevel(obj.getInt("level"));
-                            pathList.add(avtomobilePath);
+                            Double latitude = obj.getDouble("lat");
+                            Double longitude = obj.getDouble("lng");
+                            int level = obj.getInt("level");
+                            PolylineOptions polylineOptions = new PolylineOptions();
+                            polylineOptions.add(new LatLng(latitude, latitude));
+
+                            switch (level){
+                                case 1:
+                                    polylineOptions.color(Color.GREEN);
+                                    break;
+                                case 2:
+                                    polylineOptions.color(Color.YELLOW);
+                                    break;
+                                case 3:
+                                    polylineOptions.color(Color.RED);
+                                    break;
+                            }
+                            mMap.addPolyline(polylineOptions);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
