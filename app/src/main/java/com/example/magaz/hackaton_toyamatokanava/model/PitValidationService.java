@@ -30,7 +30,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.http.Field;
-import retrofit2.http.Multipart;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 /**
@@ -38,7 +38,7 @@ import retrofit2.http.POST;
  */
 public class PitValidationService extends IntentService implements SensorEventListener {
     private static final double MINIMUM_SPEED_CONSTANT = 4.1;
-    private static final String URL_FOR_POST_REQUEST = "";
+    private static final String URL_FOR_POST_REQUEST = "http://31.13.134.171:8080/";
 
     private GoogleApiClient mGoogleApiClient;
     private Location mCurrentLocation;
@@ -188,7 +188,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
 
         @Override
         public void run() {
-            if (mCurrentSpeed > MINIMUM_SPEED_CONSTANT) {
+           // if (mCurrentSpeed > MINIMUM_SPEED_CONSTANT) {
 //                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 //                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder()
@@ -215,13 +215,13 @@ public class PitValidationService extends IntentService implements SensorEventLi
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+           // }
         }
     }
 
     interface ISendDataOnPostRequest {
-        @Multipart
-        @POST("address")
+        @FormUrlEncoded
+        @POST("yamakanava/setquality")
         Call<ResponseBody> sendData(@Field("lat") String latitude, @Field("lng") String longitude, @Field("value") String value);
     }
 
