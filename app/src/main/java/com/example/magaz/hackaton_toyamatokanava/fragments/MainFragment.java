@@ -18,15 +18,15 @@ import android.widget.TextView;
 
 import com.example.magaz.hackaton_toyamatokanava.R;
 import com.example.magaz.hackaton_toyamatokanava.model.PitValidationService;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * @author Markin Andrey on 13.10.2017.
  */
 public class MainFragment extends Fragment {
-    private double mLongitude;
-    private double mLatitude;
-    private double mShakeRatio;
-    private TextView mTestTV;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,33 +42,13 @@ public class MainFragment extends Fragment {
         checkAllPermissions();
         Intent intentService = new Intent(getContext(), PitValidationService.class);
         getActivity().startService(intentService);
-
-        IntentFilter statusBroadcastFilter = new IntentFilter(PitValidationService.Constants.BROADCAST_ACION);
-        LocationBroadcastReceiver broadcastReceiver = new LocationBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastReceiver, statusBroadcastFilter);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        mTestTV = (TextView) view.findViewById(R.id.testTV);
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     private void checkAllPermissions() {
@@ -86,13 +66,4 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private class LocationBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mLongitude = intent.getDoubleExtra(PitValidationService.Constants.SEND_LONGITUDE_EXTRA, 0);
-            mLatitude = intent.getDoubleExtra(PitValidationService.Constants.SEND_LATITUDE_EXTRA, 0);
-            mTestTV.setText(mLongitude + " " + mLatitude);
-        }
-    }
 }
