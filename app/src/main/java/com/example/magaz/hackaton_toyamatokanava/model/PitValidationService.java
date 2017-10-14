@@ -189,10 +189,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
         @Override
         public void run() {
             if (mCurrentSpeed > MINIMUM_SPEED_CONSTANT) {
-//                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-//                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder()
-//                        .addInterceptor(interceptor)
                         .connectTimeout(3, TimeUnit.MINUTES)
                         .readTimeout(3, TimeUnit.MINUTES)
                         .writeTimeout(3, TimeUnit.MINUTES)
