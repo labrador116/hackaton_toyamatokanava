@@ -188,7 +188,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
 
         @Override
         public void run() {
-           // if (mCurrentSpeed > MINIMUM_SPEED_CONSTANT) {
+            if (mCurrentSpeed > MINIMUM_SPEED_CONSTANT) {
 //                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 //                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder()
@@ -215,7 +215,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-           // }
+            }
         }
     }
 
