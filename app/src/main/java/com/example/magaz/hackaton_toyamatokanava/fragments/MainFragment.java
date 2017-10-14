@@ -18,15 +18,12 @@ import android.widget.TextView;
 
 import com.example.magaz.hackaton_toyamatokanava.R;
 import com.example.magaz.hackaton_toyamatokanava.model.PitValidationService;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * @author Markin Andrey on 13.10.2017.
  */
 public class MainFragment extends Fragment {
+    private TextView mSpeedTextView;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,12 +39,16 @@ public class MainFragment extends Fragment {
         checkAllPermissions();
         Intent intentService = new Intent(getContext(), PitValidationService.class);
         getActivity().startService(intentService);
+        IntentFilter statusBroadcastFilter = new IntentFilter(PitValidationService.Constants.BROADCAST_ACION);
+        LocationBroadcastReceiver broadcastReceiver = new LocationBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastReceiver, statusBroadcastFilter);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        mSpeedTextView = (TextView) view.findViewById(R.id.speedTextView);
         return view;
     }
 
@@ -63,6 +64,15 @@ public class MainFragment extends Fragment {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+        }
+    }
+
+    private class LocationBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Float speed = intent.getFloatExtra(PitValidationService.Constants.SEND_SPEED_EXTRA, 0);
+            mSpeedTextView.setText("Speed: " + speed);
         }
     }
 

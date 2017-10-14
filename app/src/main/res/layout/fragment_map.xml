@@ -4,14 +4,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-<!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:id="@+id/testTV"-->
-    <!--android:layout_gravity="center_horizontal"-->
-    <!--tools:text="test"-->
-    <!--android:textSize="40sp"-->
-    <!--/>-->
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/speedTextView"
+    android:layout_gravity="center|center_horizontal"
+    android:gravity="center"
+    tools:text="test"
+    android:textSize="30sp"
+    />
 
 </LinearLayout>

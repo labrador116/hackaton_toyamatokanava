@@ -109,7 +109,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
                             mCurrentSpeed = location.getSpeed();
                             mSendServerTimer = new Timer();
                             mSendToServerLocationTimerTask = new SendToServerLocationTimerTask();
-                            mSendServerTimer.schedule(mSendToServerLocationTimerTask,100, 1000);
+                            mSendServerTimer.schedule(mSendToServerLocationTimerTask, 100, 1000);
 
                         }
                     });
@@ -158,7 +158,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
 
     private int validateRatio() {
         int result = 0;
-        if ( mShakeRatio < 2) {
+        if (mShakeRatio < 2) {
             result = 1;
         }
         if (mShakeRatio > 2 && mShakeRatio < 4) {
@@ -178,12 +178,13 @@ public class PitValidationService extends IntentService implements SensorEventLi
                 Intent intent = new Intent(Constants.BROADCAST_ACION);
                 intent.putExtra(Constants.SEND_LONGITUDE_EXTRA, mCurrentLocation.getLongitude());
                 intent.putExtra(Constants.SEND_LATITUDE_EXTRA, mCurrentLocation.getLatitude());
+                intent.putExtra(Constants.SEND_SPEED_EXTRA, mCurrentLocation.getSpeed());
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         }
     }
 
-   private class SendToServerLocationTimerTask extends TimerTask {
+    private class SendToServerLocationTimerTask extends TimerTask {
 
         @Override
         public void run() {
@@ -205,10 +206,10 @@ public class PitValidationService extends IntentService implements SensorEventLi
                 String lat = String.valueOf(mCurrentLocation.getLatitude());
                 String value = String.valueOf(validateRatio());
 
-                Call<ResponseBody> call = postRequest.sendData(lat,lng,value);
+                Call<ResponseBody> call = postRequest.sendData(lat, lng, value);
                 try {
                     retrofit2.Response<ResponseBody> response = call.execute();
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         int q = 0; //test
                     }
                 } catch (IOException e) {
@@ -228,6 +229,7 @@ public class PitValidationService extends IntentService implements SensorEventLi
         public static final String BROADCAST_ACION = "com.example.magaz.hackaton_toyamatokanava.model.PitValidationService.Broadcast";
         public static final String SEND_LONGITUDE_EXTRA = "com.example.magaz.hackaton_toyamatokanava.model.PitValidationService.Seind_Longitude_EXTRA";
         public static final String SEND_LATITUDE_EXTRA = "com.example.magaz.hackaton_toyamatokanava.model.PitValidationService.Seind_Latitude_EXTRA";
+        public static final String SEND_SPEED_EXTRA = "com.example.magaz.hackaton_toyamatokanava.model.PitValidationService.Send_Speed";
         public static final String TEST_SHAKE_RATIO = "com.example.magaz.hackaton_toyamatokanava.model.PitValidationService.Shake_Ratio";
     }
 }

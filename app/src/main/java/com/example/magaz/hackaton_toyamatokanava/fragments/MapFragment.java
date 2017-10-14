@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.example.magaz.hackaton_toyamatokanava.R;
-import com.example.magaz.hackaton_toyamatokanava.activities.MainApplicationActivity;
 import com.example.magaz.hackaton_toyamatokanava.model.PitValidationService;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +24,7 @@ public class MapFragment extends SupportMapFragment {
     private GoogleMap mMap;
     private double mLongitude;
     private double mLatitude;
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -35,13 +34,13 @@ public class MapFragment extends SupportMapFragment {
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mMap=googleMap;
+                mMap = googleMap;
             }
         });
     }
 
-    private void updateUI(){
-        if (mMap==null){
+    private void updateUI() {
+        if (mMap == null) {
             return;
         }
 
@@ -49,7 +48,7 @@ public class MapFragment extends SupportMapFragment {
         LatLngBounds latLngBounds = new LatLngBounds.Builder()
                 .include(itemPoint)
                 .build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(itemPoint,17);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(itemPoint, 17);
         mMap.animateCamera(cameraUpdate);
         MarkerOptions myMarker = new MarkerOptions()
                 .position(itemPoint);
